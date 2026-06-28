@@ -1,0 +1,11 @@
+T1059 - Command and Scripting Interpreter
+Techniques involving PowerShell, Bash, or scripting abuse.
+
+T1059.001 - PowerShell
+Often used for fileless malware and obfuscation attacks.
+
+T1071 - Application Layer Protocol
+Used for command and control (HTTP, HTTPS, DNS).
+
+T1041 - Exfiltration Over C2 Channel
+Data stolen via command and control channels.

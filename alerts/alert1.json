@@ -1,0 +1,11 @@
+{
+  "id": "ALRT-0001",
+  "severity": "High",
+  "hostname": "PC-045",
+  "user": "jdoe",
+  "source_ip": "192.168.1.24",
+  "destination_ip": "185.199.111.153",
+  "event": "PowerShell execution",
+  "command": "powershell -enc SQBmACgAJABQAFMAVgBlAHIAcwBpAG8AbgApAA==",
+  "timestamp": "2026-07-10T09:12:45Z"
+}

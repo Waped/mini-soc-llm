@@ -1,0 +1,9 @@
+High severity alerts must be treated first.
+
+Any encoded PowerShell command is suspicious.
+
+Repeated failed logins may indicate brute force.
+
+Outbound periodic traffic may indicate beaconing.
+
+Always correlate alert with MITRE ATT&CK.

@@ -1,0 +1,17 @@
+PowerShell suspicious execution:
+- Isolate host immediately
+- Check parent process
+- Decode command
+- Search for persistence
+- Block IP if needed
+
+Brute force attack:
+- Identify source IP
+- Block temporarily
+- Reset affected accounts
+- Enable MFA
+
+Malware detection:
+- Quarantine machine
+- Hash analysis
+- Scan network for spread
