@@ -6,9 +6,12 @@ load_dotenv()
 
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
+
 def ask_llm(system_prompt: str, user_prompt: str):
 
-    prompt = f"""
+    try:
+
+        prompt = f"""
 {system_prompt}
 
 ---
@@ -16,9 +19,16 @@ def ask_llm(system_prompt: str, user_prompt: str):
 {user_prompt}
 """
 
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=prompt
-    )
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt
+        )
 
-    return response.text
+        if not response.text:
+            raise Exception("Empty response")
+
+        return response.text
+
+    except Exception as e:
+        print(f"[LLM ERROR] {e}")
+        raise
