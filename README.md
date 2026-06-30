@@ -1,108 +1,181 @@
-# Mini SOC LLM
+# 🛡️ Mini SOC LLM
 
-## Présentation
+Un mini-agent conversationnel destiné à assister un Security Operations Center (SOC) dans l'analyse d'alertes de sécurité.
 
-Mini SOC LLM est un projet personnel développé dans le cadre de ma formation en Mastère Cybersécurité & Cloud à l'EFREI Paris.
+Le projet reçoit une alerte de sécurité au format JSON, enrichit son analyse grâce à une base de connaissances (RAG simple) et utilise Gemini 2.5 Flash pour produire une analyse structurée comprenant :
 
-L'objectif est de simuler un assistant IA capable d'aider un analyste SOC à analyser automatiquement une alerte de sécurité grâce à un Large Language Model (LLM).
+- Classification de la menace
+- Niveau de sévérité
+- Contexte MITRE ATT&CK
+- Recommandations d'investigation
+- Actions de remédiation
 
-Le projet s'inspire des assistants IA utilisés dans les Security Operations Centers pour accélérer les premières phases d'investigation.
-
----
-
-## Fonctionnalités
-
-* Analyse d'une alerte de sécurité au format JSON
-* Génération automatique d'un rapport d'analyse
-* Classification de la menace
-* Référence aux techniques MITRE ATT&CK
-* Recommandations d'investigation
-* Recommandations de remédiation
-* Mini-RAG basé sur une base de connaissances locale
-* API REST développée avec FastAPI
-* Conteneurisation avec Docker
-* Pipeline CI/CD avec GitHub Actions
-* Gestion des erreurs avec retry et fallback
+Ce projet a été réalisé dans le cadre d'un projet personnel afin d'approfondir les technologies LLM appliquées à la cybersécurité.
 
 ---
 
-## Architecture
+#  Fonctionnalités
 
-```text
-Client
-   │
-POST /analyze
-   │
-FastAPI
-   │
-Agent SOC
-   │
-Mini RAG
-   │
-Gemini 2.5 Flash
-   │
-Réponse JSON
+- Analyse automatique d'alertes de sécurité
+- API REST avec FastAPI
+- RAG simple basé sur des fichiers texte
+- Intégration de Gemini 2.5 Flash
+- Réponses JSON structurées
+- Retry automatique en cas d'erreur
+- Fallback si le modèle n'est pas disponible
+- Conteneurisation avec Docker
+- Pipeline CI avec GitHub Actions
+
+---
+
+#  Technologies utilisées
+
+- Python 3.10
+- FastAPI
+- Google Gemini 2.5 Flash
+- Docker
+- GitHub Actions
+- python-dotenv
+
+---
+
+#  Structure du projet
+
+```
+mini-soc-llm/
+│
+├── app/
+│   ├── api.py
+│   ├── llm.py
+│   ├── parser.py
+│   ├── prompts.py
+│   ├── rag.py
+│   ├── utils.py
+│   ├── main.py
+│   └── __init__.py
+│
+├── alerts/
+│   └── alert1.json
+│
+├── knowledge/
+│   ├── mitre_attack.txt
+│   └── soc_playbook.txt
+│
+├── .github/
+│   └── workflows/
+│
+├── Dockerfile
+├── requirements.txt
+└── README.md
 ```
 
 ---
 
-## Technologies
+#  Installation
 
-* Python
-* FastAPI
-* Google Gemini 2.5 Flash
-* Docker
-* GitHub Actions
-* JSON
-* Git
+## 1. Cloner le dépôt
+
+```bash
+git clone https://github.com/<ton-utilisateur>/mini-soc-llm.git
+
+cd mini-soc-llm
+```
 
 ---
 
-## Installation
+## 2. Créer un environnement virtuel
 
-Créer un environnement virtuel :
+Sous Linux / WSL :
 
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 ```
 
 Activer l'environnement :
-
-Linux / WSL :
 
 ```bash
 source .venv/bin/activate
 ```
 
-Installer les dépendances :
+Sous Windows PowerShell :
+
+```powershell
+python -m venv .venv
+
+.venv\Scripts\Activate.ps1
+```
+
+---
+
+## 3. Installer les dépendances
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Créer un fichier `.env` :
+---
 
-```text
-GEMINI_API_KEY=your_api_key
+## 4. Configurer la clé API Gemini
+
+Créer un fichier `.env` à la racine du projet.
+
+```
+GEMINI_API_KEY=VotreCleAPI
 ```
 
 ---
 
-## Lancer l'API
+#  Exécution en local
+
+## Mode CLI
+
+```bash
+python -m app.main
+```
+
+---
+
+## Mode API
+
+Lancer FastAPI :
 
 ```bash
 uvicorn app.api:app --reload
 ```
 
-Documentation interactive :
+Puis ouvrir :
 
 ```
-http://127.0.0.1:8000/docs
+http://localhost:8000/docs
 ```
 
 ---
 
-## Exemple de requête
+#  Exécution avec Docker
+
+## Construire l'image
+
+```bash
+docker build -t mini-soc-llm .
+```
+
+## Lancer le conteneur
+
+```bash
+docker run --env-file .env -p 8000:8000 mini-soc-llm
+```
+
+L'API sera disponible à l'adresse :
+
+```
+http://localhost:8000/docs
+```
+
+---
+
+#  Exemple de requête
+
+POST `/analyze`
 
 ```json
 {
@@ -116,25 +189,48 @@ http://127.0.0.1:8000/docs
 
 ---
 
-## Exemple de réponse
+#  Exemple de réponse
 
 ```json
 {
-  "incident_type": "Brute Force",
+  "incident_type": "Brute Force Attempt",
   "severity": "High",
   "mitre_technique": "T1110",
-  "confidence": 0.95,
-  "summary": "...",
-  "investigation_steps": [],
-  "remediation_actions": []
+  "confidence": 0.94,
+  "recommendation": [
+    "Block the source IP",
+    "Investigate authentication logs",
+    "Reset the impacted account password"
+  ]
 }
 ```
 
 ---
 
-## Évolutions possibles
+#  Pipeline CI
 
-* Intégration d'un SIEM
-* RAG avec base vectorielle
-* Déploiement sur Azure
-* Support de plusieurs fournisseurs de LLM
+À chaque `git push` sur la branche `main`, GitHub Actions :
+
+- installe les dépendances
+- exécute le projet
+- vérifie que le build est valide
+
+---
+
+#  Améliorations possibles
+
+- Intégration avec un SIEM (Microsoft Sentinel, Splunk...)
+- Utilisation d'une base vectorielle pour le RAG
+- Authentification de l'API
+- Déploiement sur Azure
+- Analyse de plusieurs alertes simultanément
+
+---
+
+# 👤 Auteur
+
+**Alioune Thiaw**
+
+Étudiant en Mastère Cybersécurité & Cloud – EFREI Paris
+
+Projet personnel réalisé dans le cadre d'un apprentissage des LLM appliqués au SOC.
